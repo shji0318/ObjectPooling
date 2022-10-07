@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class Util 
+public static class Util
 {
-    public static T Load<T> (string path) where T : UnityEngine.Object
+    public static T Load<T>(string path) where T : UnityEngine.Object
     {
-        if(typeof(T)==typeof(GameObject))
+        if (typeof(T) == typeof(GameObject))
         {
             // path 부분에서 주소 뒷부분에 object 네임만 추출
             string objName = path;
@@ -16,12 +16,12 @@ public static class Util
 
             GameObject go = PoolManager._instance.GetOriginal(objName); // PoolManager에 등록되어 있는지 확인
             if (go != null)
-                return go as T;            
+                return go as T;
         }
 
         return Resources.Load<T>(path);
     }
-    public static GameObject Instantiate(string name, Transform parent=null)
+    public static GameObject Instantiate(string name, Transform parent = null)
     {
         GameObject original = Load<GameObject>($"Prefabs/{name}");
 
@@ -37,14 +37,14 @@ public static class Util
         return go;
     }
 
-    public static void Destroy (GameObject go)
+    public static void Destroy(GameObject go)
     {
         if (go == null)
             return;
 
         Poolable poolable = go.GetComponent<Poolable>();
 
-        if(poolable != null) // Poolable이 등록되어 있으면 Destroy가 아닌 Push 과정을 통해 Pool이 생성되어 있다면 삭제하지않고 Pool로 이동하는 방식
+        if (poolable != null) // Poolable이 등록되어 있으면 Destroy가 아닌 Push 과정을 통해 Pool이 생성되어 있다면 삭제하지않고 Pool로 이동하는 방식
         {
             PoolManager._instance.Push(poolable);
             return;
